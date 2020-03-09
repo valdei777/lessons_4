@@ -1,6 +1,6 @@
--- ДЗ
--- Организацию лайков от пользователе реализую таким образом:
--- таблтца содержит в себе каждый лайк.
+-- Р”Р—
+-- РћСЂРіР°РЅРёР·Р°С†РёСЋ Р»Р°Р№РєРѕРІ РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»Рµ СЂРµР°Р»РёР·СѓСЋ С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј:
+-- С‚Р°Р±Р»С‚С†Р° СЃРѕРґРµСЂР¶РёС‚ РІ СЃРµР±Рµ РєР°Р¶РґС‹Р№ Р»Р°Р№Рє.
 CREATE TABLE approves(
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	id_users INT NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE approves(
 	created_like DATETIME DEFAULT NOW()
 	);
 	
--- Попробую частично описать проект GeekBrains.
--- пока представлена общая структура думаю будут еще не малые доработки и изменения.
+-- РџРѕРїСЂРѕР±СѓСЋ С‡Р°СЃС‚РёС‡РЅРѕ РѕРїРёСЃР°С‚СЊ РїСЂРѕРµРєС‚ GeekBrains.
+-- РїРѕРєР° РїСЂРµРґСЃС‚Р°РІР»РµРЅР° РѕР±С‰Р°СЏ СЃС‚СЂСѓРєС‚СѓСЂР° РґСѓРјР°СЋ Р±СѓРґСѓС‚ РµС‰Рµ РЅРµ РјР°Р»С‹Рµ РґРѕСЂР°Р±РѕС‚РєРё Рё РёР·РјРµРЅРµРЅРёСЏ.
 CREATE DATABASES geekbrains;
 USE geekbrins;
 CREATE TABLE faculty (
@@ -98,34 +98,34 @@ CREATE TABLE lessons (
 
 
 
--- проработка урока 
+-- РїСЂРѕСЂР°Р±РѕС‚РєР° СѓСЂРѕРєР° 
 SHOW DATABASES;
 USE vk;
 SHOW tables;
--- обработка таблицы сообществ
+-- РѕР±СЂР°Р±РѕС‚РєР° С‚Р°Р±Р»РёС†С‹ СЃРѕРѕР±С‰РµСЃС‚РІ
 SELECT * FROM communities;
--- проверка таблицы пользователей
+-- РїСЂРѕРІРµСЂРєР° С‚Р°Р±Р»РёС†С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 SELECT * FROM users LIMIT 10;
--- добиваемся коректных номеров телефонов
+-- РґРѕР±РёРІР°РµРјСЃСЏ РєРѕСЂРµРєС‚РЅС‹С… РЅРѕРјРµСЂРѕРІ С‚РµР»РµС„РѕРЅРѕРІ
 UPDATE users SET phone = FLOOR (1+ RAND()*10000000);
 UPDATE users SET phone = CONCAT (7, phone);
--- Исправляем поле пол
+-- РСЃРїСЂР°РІР»СЏРµРј РїРѕР»Рµ РїРѕР»
 DESC profiles;
 SELECT * FROM profiles LIMIT 10;
 CREATE TEMPORARY TABLE gender (gender CHAR(1));
 INSERT INTO gender VALUES ('m'), ('f');
 SELECT * FROM gender;
 UPDATE profiles SET gender = (SELECT gender FROM gender ORDER BY RAND() LIMIT 1);
--- удаляем не верно созданое поле, создаем и заполняем его 
+-- СѓРґР°Р»СЏРµРј РЅРµ РІРµСЂРЅРѕ СЃРѕР·РґР°РЅРѕРµ РїРѕР»Рµ, СЃРѕР·РґР°РµРј Рё Р·Р°РїРѕР»РЅСЏРµРј РµРіРѕ 
 ALTER TABLE profiles DROP photo_id;
 ALTER TABLE profiles 
 	ADD COLUMN photo_id INT;
 UPDATE profiles SET photo_id = FLOOR (1+ RAND()*100);
--- Изменяем связи сообщений
+-- РР·РјРµРЅСЏРµРј СЃРІСЏР·Рё СЃРѕРѕР±С‰РµРЅРёР№
 SELECT * FROM messages LIMIT 10;
 UPDATE messages SET from_user_id = FLOOR (1+ RAND()*100);
 UPDATE messages SET to_user_id = FLOOR (1+ RAND()*100);
--- Работаем с типами медиа
+-- Р Р°Р±РѕС‚Р°РµРј СЃ С‚РёРїР°РјРё РјРµРґРёР°
 SELECT * FROM media_types;
 DELETE FROM media_types;
 INSERT INTO media_types (name) VALUES
@@ -133,26 +133,26 @@ INSERT INTO media_types (name) VALUES
    ('video'),
    ('audio');
 TRUNCATE media_types;
--- таблица медиа
+-- С‚Р°Р±Р»РёС†Р° РјРµРґРёР°
 SELECT * FROM media;
 UPDATE media SET media_type_id = FLOOR (1 +RAND()*3);
 UPDATE media SET metadata = CONCAT('{"owner":"', 
   (SELECT CONCAT(first_name, ' ', last_name) FROM users WHERE id = user_id),
   '"}');
 ALTER TABLE media MODIFY COLUMN metadata JSON;
--- Исправляем статусы дружбы
+-- РСЃРїСЂР°РІР»СЏРµРј СЃС‚Р°С‚СѓСЃС‹ РґСЂСѓР¶Р±С‹
 SELECT * FROM friendship_statuses;
 TRUNCATE friendship_statuses; 
 INSERT INTO friendship_statuses (name) VALUES
     ('Requsted'),
     ('Confirmed'),
     ('Rejected');
--- Обрабатываем таблицу дружбы  
+-- РћР±СЂР°Р±Р°С‚С‹РІР°РµРј С‚Р°Р±Р»РёС†Сѓ РґСЂСѓР¶Р±С‹  
 SELECT * FROM friendship LIMIT 10;
 UPDATE friendship SET
     user_id = FLOOR(1 + (RAND() * 100)), 
     friend_id = FLOOR(1+(RAND() *100)),
     status_id  = FLOOR(1+(RAND()*3));
--- Обработка таблицы групп
+-- РћР±СЂР°Р±РѕС‚РєР° С‚Р°Р±Р»РёС†С‹ РіСЂСѓРїРї
 SELECT * FROM communities;
 SELECT * FROM communities_users;
