@@ -1,22 +1,129 @@
-  -- заполняем поля текущей датой
-  UPDATE users SET created_at, updated_at  NOW();
+ -- заполняем поля текущей датой
   
-  -- изменить тип данных с текста на дату:
+  UPDATE users SET created_at, updated_at  NOW(); -- версия урока
+  UPDATE users SET created_at = CURRENT_TIMESTAMP(), updated_at = CURRENT_TIMESTAMP(); -- другая версия
+  
+ -- изменить тип данных с текста на дату версия урока:
+ update users set created_at = str_to_date(created_at, '%d.%m.%Y %k:%i'),
+                 updated_at = str_to_date(created_at, '%d.%m.%Y %k:%i');
+
+alter table users 
+change 
+created_at created_at datetime default current_timestamp;
+
+alter table users
+change
+updated_at updated_at datetime default current_timestamp on update current_timestamp;
   
   
-  -- сортировка таблицы по возрастанию но "0" в конце списка
+  
+ -- сортировка таблицы по возрастанию но "0" в конце списка
+drop table if exists date_1; 
+create table date_1 (
+ 	id serial primary key,
+ 	name varchar (100),
+ 	value int 
+ 	);
+ select * from date_1;
+insert into date_1 (name, value)
+VALUES
+	('плитка', 0),
+	('обои', 12),
+	('клей', 30),
+	('МДФ',0),
+	('краска',0);
+
+select * from date_1
+order by
+	if (value > 0,0,1), value;
   
   
-  --извлечь из таблицы пользователей родившихся в мае и августе
+ -- сортировка таблицы по возрастанию но "0" в конце списка вариант 2
+  drop table if exists Products;
+CREATE TABLE Products
+(
+    Id serial PRIMARY KEY,
+    ProductName VARCHAR(30) NOT NULL,
+    ProductCount INT
+);
+insert into Products ( ProductName, ProductCount)
+values
+	('tovar_0', 0),
+	('tovar_1', 10),
+	('tovar_2', 2),
+	('tovar_3', 3),
+	('tovar_4', 11),
+	('tovar_5', 0),
+	('tovar_6', 0),
+	('tovar_7', 7);
   
+  SELECT ProductName, ProductCount, 
+CASE
+    WHEN ProductCount > 0 
+        then ProductCount - (select max(ProductCount) from Products)
+    else (select max(ProductCount) from Products)
+END as value
+FROM Products order by value;
   
-  -- установить порядок как в IN 
-SELECT * FROM users WHERE id IN (5, 1, 2);
+-- извлечь из таблицы пользователей родившихся в мае и августе
+select * from users where date_format(birthday_at, '%M') in ('may','august'); -- пример урока
+
+select name, birthday_at FROM users where month(birthday_at) in (5,8) -- второй вариант
+  
+-- установить порядок как в IN 
+-- SELECT * FROM users WHERE id IN (5, 1, 2);
+
+drop table if exists catalogs;
+create table catalogs (
+	id serial primary key,
+	name varchar (50)
+	);
+insert into catalogs 
+values
+   (null,'процессоры'),
+   (null,'материнские платы'),
+   (null,'жесткие диски'),
+   (null,'видеокарты'),
+   (null,'CD-ROM'),
+   (null,'оперативная память');
+ 
+ select * from catalogs;
+select * from catalogs where id in(5,1,2)
+ order by field (id, 5,1,2);
+ 
+ -- второй вариант
+ 
+   SELECT id, name,  
+CASE
+    WHEN id = 5
+        then 1
+    when id = 1
+        then 2
+    when id =2
+        then 3 
+    else 0
+END as value
+FROM catalogs where id in(5,1,2) order by value;
+ 
 
 -- посчитать средний возраст пользователей в таблице  users
+select AVG(timestampdiff(year, birthday_at, now())) as age from users;
+
+-- посчитать сколько дней рождения приходится на каждый день недели.
+select
+   date_format(date(concat_ws('-', year(now()), month(birthday_at), day(birthday_at))), '%W'),
+   count(*) AS total
+ from 
+    users
+ group by
+   day
+ order by
+   total desc;
 
 
---посчитать сколько дней рождения приходится на каждый день недели.
+-- посчитать произведение чисел в столбце таблицы
+select round(exp(sum(ln(id)))) from catalogs;
 
 
---посчитать произведение чисел в столбце таблицы
+
+
