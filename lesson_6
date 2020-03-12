@@ -1,1 +1,80 @@
+-- ДЗ к уроку 6
 
+-- Проанализировать запросы, которые выполнялись на занятии, определить возможные корректировки и/или улучшения
+
+--Подсчитать общее количество лайков, которые получили 10 самых молодых пользователей.
+
+--Определить кто больше поставил лайков (всего) - мужчины или женщины?
+
+-- Найти 10 пользователей, которые проявляют наименьшую активность в использовании социальной сети.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Формирование таблиц лайков
+
+drop table if exists likes;
+create table likes (
+	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	user_id INT UNSIGNED NOT NULL,
+	target_id INT UNSIGNED NOT NULL,
+	target_type_id INT UNSIGNED NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+DROP TABLE IF EXISTS target_types;
+CREATE TABLE target_types (
+	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	name VARCHAR (255) NOT NULL UNIQUE,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);
+
+INSERT INTO target_types (name) VALUES
+	('messages'),
+	('users'),
+	('media'),
+	('posts');
+
+INSERT INTO likes
+	SELECT 
+		id,
+		FLOOR(1 + (RAND()*100)),
+		FLOOR(1 + (RAND()*100)),
+		FLOOR(1 + (RAND()*4)),
+		CURRENT_TIMESTAMP
+	FROM messages;	
+
+-- проверяем
+SELECT * FROM likes LIMIT 10;
+
+DROP TABLE IF EXISTS posts;
+CREATE TABLE posts (
+	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	user_id INT UNSIGNED NOT NULL,
+	community_id INT UNSIGNED,
+	head VARCHAR (255) NOT NULL,
+	body TEXT NOT NULL,
+	media_id INT UNSIGNED,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+	);
+
+SELECT * FROM posts LIMIT 10;
+
+-- корректируем данные
+
+UPDATE posts SET user_id = FLOOR (1+ RAND()*100);
+UPDATE posts SET community_id = FLOOR (1+ RAND()*100);
+UPDATE posts SET media_id = FLOOR (1+ RAND()*100);
+
+--     THE END
