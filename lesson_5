@@ -111,7 +111,7 @@ select AVG(timestampdiff(year, birthday_at, now())) as age from users;
 
 -- посчитать сколько дней рождения приходится на каждый день недели.
 select
-   date_format(date(concat_ws('-', year(now()), month(birthday_at), day(birthday_at))), '%W'),
+   date_format(date(concat_ws('-', year(now()), month(birthday_at), day(birthday_at))), '%W') AS day,
    count(*) AS total
  from 
     users
