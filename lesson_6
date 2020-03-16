@@ -14,8 +14,13 @@ GROUP BY target_id;
 
 
 --Определить кто больше поставил лайков (всего) - мужчины или женщины?
-SELECT user_id AS liks_wumen FROM likes WHERE user_id IN (SELECT user_id FROM profiles WHERE gender='f');
-SELECT user_id AS liks_men FROM likes WHERE user_id IN (SELECT user_id FROM profiles WHERE gender='m');
+
+SELECT COUNT(user_id) as user_i,
+   (SELECT gender FROM profiles WHERE user_id = likes.user_id) AS gender_user
+	FROM 
+		likes WHERE user_id IN 
+			(SELECT user_id FROM profiles)
+GROUP BY gender_user; 
 
 -- Найти 10 пользователей, которые проявляют наименьшую активность в использовании социальной сети.
 
