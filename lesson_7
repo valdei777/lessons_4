@@ -2,10 +2,13 @@
 
 -- Выведите список товаров products и разделов catalogs, который соответствует товару.
 
+-- Пусть имеется таблица рейсов flights (id, from, to) и таблица городов cities (label, name).
+-- Поля from, to и label содержат английские названия городов, поле name — русское.
+-- Выведите список рейсов flights с русскими названиями городов.
 
 
 
--- создаем структуру базы
+-- создаем структуру базы к первым двум заданиям
 DROP TABLE IF EXISTS purchase;
 CREATE TABLE purchase (
 	id SERIAL PRIMARY KEY NOT NULL,
