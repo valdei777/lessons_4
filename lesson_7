@@ -1,0 +1,40 @@
+-- Составьте список пользователей users, которые осуществили хотя бы одину покупку purchase в интернет магазине.
+
+-- Выведите список товаров products и разделов catalogs, который соответствует товару.
+
+
+
+
+-- создаем структуру базы
+DROP TABLE IF EXISTS purchase;
+CREATE TABLE purchase (
+	id SERIAL PRIMARY KEY NOT NULL,
+	user_id INT UNSIGNED NOT NULL,
+	product_id INT UNSIGNED NOT NULL,
+	created_as DATETIME DEFAULT CURRENT_TIMESTAMP	
+	);
+
+DROP TABLE IF EXISTS product;
+CREATE TABLE `product` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `price` int(10) unsigned NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  `created_as` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+DROP TABLE IF EXISTS `users_score`;
+CREATE TABLE `users_score` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `last_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS category;
+CREATE TABLE category (
+	id SERIAL NOT NULL PRIMARY KEY,
+	name_category VARCHAR (100)
+	);
