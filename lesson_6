@@ -4,13 +4,14 @@
 
 --Подсчитать общее количество лайков, которые получили 10 самых молодых пользователей.
 
-SELECT user_id, (TIMESTAMPDIFF(YEAR, birthday, NOW())) FROM profiles ORDER BY birthday DESC LIMIT 10; -- ОПРЕДЕЛИЛ МОЛОДЫХ ПОЛЬЗОВАТЕЛЕЙ
-
 SELECT target_id AS mediafile, COUNT(*) AS likes 
 	FROM likes WHERE target_id IN 
 		(SELECT id FROM posts WHERE user_id IN 
-			(SELECT user_id FROM profiles WHERE user_id IN (1,2,3,4,5,6))) -- ЗДЕСЬ ДОЛЖНО БЫТЬ УСЛОВИЕ ВОЗРАСТА
-GROUP BY target_id; -- ПОЛЬЗОВАТЕЛЬ ПОЛУЧИЛ ЛАЙКОВ
+			(SELECT user_id FROM profiles WHERE user_id IN 
+				(SELECT user_id FROM  
+(SELECT user_id, (TIMESTAMPDIFF(YEAR, birthday, NOW())) FROM profiles ORDER BY birthday DESC LIMIT 10) AS jun_user)))
+GROUP BY target_id;
+
 
 --Определить кто больше поставил лайков (всего) - мужчины или женщины?
 SELECT user_id AS liks_wumen FROM likes WHERE user_id IN (SELECT user_id FROM profiles WHERE gender='f');
