@@ -1,10 +1,39 @@
 -- Составьте список пользователей users, которые осуществили хотя бы одину покупку purchase в интернет магазине.
+SELECT
+	CONCAT(first_name, ' ', last_name) 
+FROM users_score 
+WHERE id IN 
+	(SELECT user_id FROM purchase);
+
+
+
+SELECT CONCAT(first_name, ' ', last_name)
+FROM users_score
+LEFT JOIN 
+ purchase
+ON
+ users_score.id = purchase.user_id;
+
 
 -- Выведите список товаров products и разделов catalogs, который соответствует товару.
+
+SELECT p.name, p.price, c.name_category 
+FROM product AS p
+RIGHT JOIN
+category AS c
+ON
+c.name_category = p.category_id
+ORDER BY p.category_id ;
 
 -- Пусть имеется таблица рейсов flights (id, from, to) и таблица городов cities (label, name).
 -- Поля from, to и label содержат английские названия городов, поле name — русское.
 -- Выведите список рейсов flights с русскими названиями городов.
+
+
+
+
+
+
 
 
 
