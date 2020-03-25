@@ -19,7 +19,7 @@ ON
 
 SELECT p.name, p.price, c.name_category 
 FROM product AS p
-RIGHT JOIN
+LEFT JOIN
 category AS c
 ON
 c.name_category = p.category_id
@@ -29,7 +29,16 @@ ORDER BY p.category_id ;
 -- Поля from, to и label содержат английские названия городов, поле name — русское.
 -- Выведите список рейсов flights с русскими названиями городов.
 
-
+SELECT
+  flights.id,
+  from_cites.name AS 'From',
+  to_cites.name AS 'to'
+FROM flights
+ LEFT JOIN cities AS from_cites
+	ON flights.from = from_cites.label
+ LEFT JOIN cities AS to_cites
+	ON flights.to = to_cites.label
+order by flights.id;
 
 
 
