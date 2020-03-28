@@ -1,32 +1,27 @@
 -- 1. Проанализировать какие запросы могут выполняться наиболее часто в процессе работы приложения и добавить необходимые индексы.
 
+
+
+
 -- 2. Задание на оконные функции.
 -- Провести аналитику в разрезе групп.
 Построить запрос, который будет выводить следующие столбцы:
 имя группы
-среднее количество пользователей в группах
-самый молодой пользователь в группе
-самый пожилой пользователь в группе
-количество пользователей в группе
-всего пользователей в системе
-отношение в процентах (количество пользователей в группе / всего пользователей в системе) * 100
-3. (по желанию) Задание на денормализацию
-Разобраться как построен и работает следующий запрос:
-Найти 10 пользователей, которые проявляют наименьшую активность в использовании социальной сети.
-SELECT users.id,
-  COUNT( DISTINCT messages.id) + 
-  COUNT( DISTINCT likes.id) + 
-  COUNT( DISTINCT media.id) AS activity 
-  FROM users
-    LEFT JOIN messages 
-      ON users.id = messages.from_user_id
-    LEFT JOIN likes
-      ON users.id = likes.user_id
-    LEFT JOIN media
-      ON users.id = media.user_id
-  GROUP BY users.id
-  ORDER BY activity
-  LIMIT 10;
+среднее количество пользователей в группах -
+самый молодой пользователь в группе +
+самый пожилой пользователь в группе +
+количество пользователей в группе +
+всего пользователей в системе +
+отношение в процентах (количество пользователей в группе / всего пользователей в системе) * 100 +
 
-Правильно-ли он построен?
-Какие изменения, включая денормализацию, можно внести в структуру БД чтобы существенно повысить скорость работы этого запроса?
+SELECT DISTINCT communities.name AS name_group,
+	COUNT(communities_users.user_id) OVER(PARTITION BY communities_users.community_id) AS total_in_group,
+	COUNT(communities_users.user_id) OVER() AS total_users,
+	MIN(profiles.birthday) OVER (PARTITION BY communities_users.community_id) AS old_user, 
+	MAX(profiles.birthday) OVER (PARTITION BY communities_users.community_id) AS young_user,
+	COUNT(communities_users.user_id) OVER(PARTITION BY communities_users.community_id) / COUNT(communities_users.user_id) OVER() * 100 AS "%%"
+	FROM communities_users
+	LEFT JOIN communities
+	  ON communities.id = communities_users.community_id
+	LEFT JOIN profiles
+      ON communities_users.user_id = profiles.user_id;
